@@ -1,10 +1,9 @@
 # Author: Adam Undus
 # Description: GEDCOM file parser
-# Date:  6/6/19
+# Date:  5/28/19
 
 import sys
-from beautifultable import BeautifulTable
-import datetime
+
 
 def parse(file):
     tags = {
@@ -77,31 +76,9 @@ def parse(file):
             'args': -1
         }
     }
-    # individual template:
-    # {
-    #     'id':''
-    #     'name' : ''
-    #     'gender':''
-    #     'family':''
-    #     'DOB':''
-    #     'DOD':''
-    #     'children':''
-    #     'spouse':''
-    # }
-    # Family template:
-    # {
-    #     'id':''
-    #     'marrige date' : ''
-    #     'divorce date':''
-    #     'husbID':''
-    #     'wifeID':''
-    #     'Children':[]
-    # }
-    individuals = []
-    families = []
-    with open(file, 'r') as inputFile:        
+    with open(file, 'r') as inputFile:
         for line in inputFile.readlines():
-            if line == '': continue
+            if line == '': break
             print('--> ' + line.strip())
             arr = line.strip().split(' ')
             level = int(arr[0])
@@ -121,17 +98,17 @@ def parse(file):
                 expectedNumArgs = tags[tag]['args']
             except:
                 valid = 'N'
-                #println(level, tag, valid, args)
+                println(level, tag, valid, args)
                 continue
             if tag == 'NOTE' and level == 0:
-                #println(level, tag, valid, args)
+                println(level, tag, valid, args)
                 continue
             if expectedIndent == level and expectedNumArgs == len(args):
-                #println(level, tag, valid, args)
+                println(level, tag, valid, args)
                 continue
             else:
                 valid = 'N'
-                #println(level, tag, valid, args)
+                println(level, tag, valid, args)
                 continue
 
 
@@ -141,7 +118,7 @@ def println(level, tag, valid, args):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print('Usage: GEDCOM_parser_info.py <file>')
+        print('Usage: GEDCOM_parser.py <file>')
         exit(1)
     else:
         file = sys.argv[1]
