@@ -137,6 +137,8 @@ def getFamInfo():
 
 
 def printInfo(individuals, families):
+    individuals = sorted(individuals, key=lambda i: i["ID"])
+    families = sorted(families, key=lambda i: i["ID"])
     # Individuals
     table1 = BeautifulTable()
     table1.column_headers = [
@@ -161,7 +163,9 @@ def printInfo(individuals, families):
             alive = True
         else:
             age = (
-            indi["DEAT"].year - born.year - ((indi["DEAT"].month, indi["DEAT"].day) < (born.month, born.day))
+                indi["DEAT"].year
+                - born.year
+                - ((indi["DEAT"].month, indi["DEAT"].day) < (born.month, born.day))
             )
             indi["DEAT"] = indi["DEAT"].strftime("%Y-%m-%d")
         table1.append_row(
