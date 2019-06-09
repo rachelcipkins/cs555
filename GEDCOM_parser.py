@@ -40,14 +40,7 @@ def parse(file):
     #     'FAMS':''
     # }
     # Family template:
-    # {
-    #     'id':'',
-    #     'marrige date' : '',
-    #     'divorce date':'',
-    #     'husbID':'',
-    #     'wifeID':'',
-    #     'Children':[]
-    # }
+    # {"ID": '', "MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}
     with open(file, "r") as inputFile:
         for line in inputFile.readlines():
             if line == "":
@@ -167,6 +160,9 @@ def printInfo(individuals, families):
         if indi["DEAT"] == "":
             alive = True
         else:
+            age = (
+            indi["DEAT"].year - born.year - ((indi["DEAT"].month, indi["DEAT"].day) < (born.month, born.day))
+            )
             indi["DEAT"] = indi["DEAT"].strftime("%Y-%m-%d")
         table1.append_row(
             [
