@@ -3,7 +3,7 @@
 # Date:  6/6/19
 
 import sys
-from beautifultable import BeautifulTable
+from prettytable import PrettyTable
 import datetime
 
 validLines = []
@@ -62,7 +62,7 @@ def parse(file):
             try:
                 expectedIndent = tags[tag]["indent"]
                 expectedNumArgs = tags[tag]["args"]
-            except:
+            except KeyError as ke:
                 valid = "N"
                 # println(level, tag, valid, args)
                 continue
@@ -82,8 +82,10 @@ def parse(file):
 def getFamInfo():
     currentFam = None
     currentIndi = None
-    individuals = []
-    families = []
+    # individuals = []
+    individuals = {}
+    # families = []
+    families = {}
     for lineNum in range(len(validLines)):
         tag = validLines[lineNum]["tag"]
         level = validLines[lineNum]["level"]
@@ -92,56 +94,47 @@ def getFamInfo():
         if tag == "DATE":
             continue
         if tag == "INDI":
+            args = "".join(args)
             currentIndi = args
-            individuals.append(
-                {
-                    "ID": args,
-                    "NAME": "",
-                    "SEX": "",
-                    "BIRT": "",
-                    "DEAT": "",
-                    "FAMC": "",
-                    "FAMS": "",
-                }
-            )
+            individuals[args] = {
+                "NAME": "",
+                "SEX": "",
+                "BIRT": "",
+                "DEAT": "",
+                "FAMC": "",
+                "FAMS": "",
+            }
             continue
         if tag in ["NAME", "SEX", "FAMS", "FAMC"]:
-            next(item for item in individuals if item["ID"] == currentIndi)[tag] = args
+            individuals[currentIndi][tag] = args
             continue
         if tag in ["BIRT", "DEAT"]:
             date = " ".join(validLines[lineNum + 1]["args"])
-            next(item for item in individuals if item["ID"] == currentIndi)[
-                tag
-            ] = datetime.datetime.strptime(date, "%d %b %Y")
+            individuals[currentIndi][tag] = datetime.datetime.strptime(date, "%d %b %Y")
             continue
         # New family, tags below are associated w families
         if tag == "FAM":
+            args = "".join(args)
             currentFam = args
-            families.append(
-                {"ID": args, "MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}
-            )
+            families[args] = {"MARR": "", "DIV": "", "HUSB": "", "WIFE": "", "CHIL": []}
             continue
         if tag == "MARR" or tag == "DIV":
             date = " ".join(validLines[lineNum + 1]["args"])
-            next(item for item in families if item["ID"] == currentFam)[
-                tag
-            ] = datetime.datetime.strptime(date, "%d %b %Y")
+            families[currentFam][tag] = datetime.datetime.strptime(date, "%d %b %Y")
             continue
         if tag == "HUSB" or tag == "WIFE":
-            next(item for item in families if item["ID"] == currentFam)[tag] = args
+            families[currentFam][tag] = args
         if tag == "CHIL":
-            next(item for item in families if item["ID"] == currentFam)[tag].append(
-                args
-            )
+            families[currentFam][tag].append(args)
     printInfo(individuals, families)
 
 
 def printInfo(individuals, families):
-    individuals = sorted(individuals, key=lambda i: i["ID"])
-    families = sorted(families, key=lambda i: i["ID"])
+    # individuals = sorted(individuals, key=lambda i: i["ID"])
+    # families = sorted(families, key=lambda i: i["ID"])
     # Individuals
-    table1 = BeautifulTable()
-    table1.column_headers = [
+    table1 = PrettyTable()
+    table1.field_names = [
         "ID",
         "Name",
         "Gender",
@@ -154,36 +147,39 @@ def printInfo(individuals, families):
     ]
     for indi in individuals:
         today = datetime.date.today()
-        born = indi["BIRT"]
+        born = individuals[indi]["BIRT"]
         age = (
             today.year - born.year - ((today.month, today.day) < (born.month, born.day))
         )
         alive = False
-        if indi["DEAT"] == "":
+        if individuals[indi]["DEAT"] == "":
             alive = True
         else:
             age = (
-                indi["DEAT"].year
+                individuals[indi]["DEAT"].year
                 - born.year
-                - ((indi["DEAT"].month, indi["DEAT"].day) < (born.month, born.day))
+                - (
+                    (individuals[indi]["DEAT"].month, individuals[indi]["DEAT"].day)
+                    < (born.month, born.day)
+                )
             )
-            indi["DEAT"] = indi["DEAT"].strftime("%Y-%m-%d")
-        table1.append_row(
+            individuals[indi]["DEAT"] = individuals[indi]["DEAT"].strftime("%Y-%m-%d")
+        table1.add_row(
             [
-                " ".join(indi["ID"]),
-                " ".join(indi["NAME"]),
-                " ".join(indi["SEX"]),
-                indi["BIRT"].strftime("%Y-%m-%d"),
+                indi,
+                " ".join(individuals[indi]["NAME"]),
+                " ".join(individuals[indi]["SEX"]),
+                individuals[indi]["BIRT"].strftime("%Y-%m-%d"),
                 age,
                 alive,
-                indi["DEAT"],
-                " ".join(indi["FAMC"]),
-                " ".join(indi["FAMS"]),
+                individuals[indi]["DEAT"],
+                " ".join(individuals[indi]["FAMC"]),
+                " ".join(individuals[indi]["FAMS"]),
             ]
         )
     # families
-    table2 = BeautifulTable()
-    table2.column_headers = [
+    table2 = PrettyTable()
+    table2.field_names = [
         "ID",
         "Married",
         "Divorced",
@@ -195,32 +191,29 @@ def printInfo(individuals, families):
     ]
 
     for fam in families:
-        if fam["DIV"] == "":
-            fam["DIV"] = "N/A"
+        if families[fam]["DIV"] == "":
+            families[fam]["DIV"] = "N/A"
         else:
-            fam["DIV"] = fam["DIV"].strftime("%Y-%m-%d")
+            families[fam]["DIV"] = families[fam]["DIV"].strftime("%Y-%m-%d")
+        # TODO: Fix these try excepts
         try:
-            husband = next(item for item in individuals if item["ID"] == fam["HUSB"])[
-                "NAME"
-            ]
-        except:
-            husband = ""
+            husband = individuals["".join(families[fam]["HUSB"])]["NAME"]
+        except KeyError as ke:
+            husband = "Husband not found."
         try:
-            wife = next(item for item in individuals if item["ID"] == fam["WIFE"])[
-                "NAME"
-            ]
-        except:
-            wife = ""
-        table2.append_row(
+            wife = individuals["".join(families[fam]["WIFE"])]["NAME"]
+        except KeyError as ke:
+            wife = "Wife not Found"
+        table2.add_row(
             [
-                " ".join(fam["ID"]),
-                fam["MARR"].strftime("%Y-%m-%d"),
-                fam["DIV"],
-                " ".join(fam["HUSB"]),
+                fam,
+                families[fam]["MARR"].strftime("%Y-%m-%d"),
+                families[fam]["DIV"],
+                " ".join(families[fam]["HUSB"]),
                 " ".join(husband),
-                " ".join(fam["WIFE"]),
+                " ".join(families[fam]["WIFE"]),
                 " ".join(wife),
-                fam["CHIL"],
+                families[fam]["CHIL"],
             ]
         )
     print("Individuals")
@@ -230,11 +223,11 @@ def printInfo(individuals, families):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: GEDCOM_parser_info.py <file>")
-        exit(1)
-    else:
-        file = sys.argv[1]
-    parse(file)
+    # if len(sys.argv) != 2:
+    #     print("Usage: GEDCOM_parser_info.py <file>")
+    #     exit(1)
+    # else:
+    #     file = sys.argv[1]
+    parse("testGEDCOM.ged")
     getFamInfo()
 
