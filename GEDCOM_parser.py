@@ -82,9 +82,7 @@ def parse(file):
 def getFamInfo():
     currentFam = None
     currentIndi = None
-    # individuals = []
     individuals = {}
-    # families = []
     families = {}
     for lineNum in range(len(validLines)):
         tag = validLines[lineNum]["tag"]
@@ -126,12 +124,37 @@ def getFamInfo():
             families[currentFam][tag] = args
         if tag == "CHIL":
             families[currentFam][tag].append(args)
+    checkDivorceBeforeDeath(individuals, families)
     printInfo(individuals, families)
 
 
+def checkDivorceBeforeDeath(individuals, families):
+    for fam in families:
+        if families[fam]["DIV"] == "":
+            continue
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if individuals[husband]["DEAT"] == "" and individuals[wife]["DEAT"] == "":
+            continue
+        if individuals[husband]["DEAT"] < families[fam]["DIV"]:
+            print(
+                "Error: {} died on {}, so he cannot be divorced on {}".format(
+                    husband,
+                    individuals[husband]["DEAT"].strftime("%Y-%m-%d"),
+                    families[fam]["DIV"].strftime("%Y-%m-%d"),
+                )
+            )
+        if individuals[wife]["DEAT"] < families[fam]["DIV"]:
+            print(
+                "Error: {} died on {}, so he cannot be divorced on {}".format(
+                    wife,
+                    individuals[wife]["DEAT"].strftime("%Y-%m-%d"),
+                    families[fam]["DIV"].strftime("%Y-%m-%d"),
+                )
+            )
+
+
 def printInfo(individuals, families):
-    # individuals = sorted(individuals, key=lambda i: i["ID"])
-    # families = sorted(families, key=lambda i: i["ID"])
     # Individuals
     table1 = PrettyTable()
     table1.field_names = [
@@ -195,7 +218,6 @@ def printInfo(individuals, families):
             families[fam]["DIV"] = "N/A"
         else:
             families[fam]["DIV"] = families[fam]["DIV"].strftime("%Y-%m-%d")
-        # TODO: Fix these try excepts
         try:
             husband = individuals["".join(families[fam]["HUSB"])]["NAME"]
         except KeyError as ke:
@@ -223,11 +245,11 @@ def printInfo(individuals, families):
 
 
 if __name__ == "__main__":
-    # if len(sys.argv) != 2:
-    #     print("Usage: GEDCOM_parser_info.py <file>")
-    #     exit(1)
-    # else:
-    #     file = sys.argv[1]
+    if len(sys.argv) != 2:
+        print("Usage: GEDCOM_parser_info.py <file>")
+        exit(1)
+    else:
+        file = sys.argv[1]
     parse("testGEDCOM.ged")
     getFamInfo()
 
