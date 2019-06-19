@@ -125,7 +125,32 @@ def getFamInfo():
         if tag == "CHIL":
             families[currentFam][tag].append(args)
     checkDivorceBeforeDeath(individuals, families)
+    checkMaleLastNames(individuals)
     printInfo(individuals, families)
+
+
+def checkMaleLastNames(individuals):
+    familyNames = {}
+    for indi in individuals:
+        if " ".join(individuals[indi]["SEX"]) == "F":
+            continue
+        lastName = individuals[indi]["NAME"][1][1:-1]
+        if " ".join(individuals[indi]["FAMS"]) == "":
+            family = " ".join(individuals[indi]["FAMC"])
+        else:
+            family = " ".join(individuals[indi]["FAMS"])
+        try:
+            if lastName == familyNames[family]:
+                continue
+            else:
+                print(
+                    "Error: Last name of {} does not match family last name of {}".format(
+                        indi, family
+                    )
+                )
+        except KeyError as ke:
+            familyNames[family] = lastName
+    return familyNames
 
 
 def checkDivorceBeforeDeath(individuals, families):
@@ -136,7 +161,10 @@ def checkDivorceBeforeDeath(individuals, families):
         husband = " ".join(families[fam]["HUSB"])
         if individuals[husband]["DEAT"] == "" and individuals[wife]["DEAT"] == "":
             continue
-        if individuals[husband]["DEAT"] < families[fam]["DIV"]:
+        if (
+            individuals[husband]["DEAT"] != ""
+            and individuals[husband]["DEAT"] < families[fam]["DIV"]
+        ):
             print(
                 "Error: {} died on {}, so he cannot be divorced on {}".format(
                     husband,
@@ -144,7 +172,10 @@ def checkDivorceBeforeDeath(individuals, families):
                     families[fam]["DIV"].strftime("%Y-%m-%d"),
                 )
             )
-        if individuals[wife]["DEAT"] < families[fam]["DIV"]:
+        if (
+            individuals[wife]["DEAT"] != ""
+            and individuals[wife]["DEAT"] < families[fam]["DIV"]
+        ):
             print(
                 "Error: {} died on {}, so he cannot be divorced on {}".format(
                     wife,
@@ -245,11 +276,12 @@ def printInfo(individuals, families):
 
 
 if __name__ == "__main__":
+    file = None
     if len(sys.argv) != 2:
         print("Usage: GEDCOM_parser_info.py <file>")
         exit(1)
     else:
         file = sys.argv[1]
-    parse("testGEDCOM.ged")
+    parse(file)
     getFamInfo()
 
