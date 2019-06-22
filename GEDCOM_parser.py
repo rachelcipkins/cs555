@@ -124,10 +124,22 @@ def getFamInfo():
             families[currentFam][tag] = args
         if tag == "CHIL":
             families[currentFam][tag].append(args)
+    checkGenderForSpouses(individuals, families)
     checkDivorceBeforeDeath(individuals, families)
     checkMaleLastNames(individuals)
     printInfo(individuals, families)
 
+def checkGenderForSpouses(individuals,families):
+    for fam in families:
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if (individuals[wife]["SEX"]==['F'] and individuals[husband]["SEX"]==['M']):
+            print("!")
+            continue
+        if(individuals[wife]["SEX"]==['M']):
+            print("Error in family {}: Sex of wife cannot be male".format(fam))
+        if(individuals[husband]["SEX"]==['F']):
+            print("Error in family {}: Sex of husband cannot be female".format(fam))
 
 def checkMaleLastNames(individuals):
     familyNames = {}
@@ -158,7 +170,9 @@ def checkDivorceBeforeDeath(individuals, families):
         if families[fam]["DIV"] == "":
             continue
         wife = " ".join(families[fam]["WIFE"])
+        print(wife)
         husband = " ".join(families[fam]["HUSB"])
+        print(husband)
         if individuals[husband]["DEAT"] == "" and individuals[wife]["DEAT"] == "":
             continue
         if (
