@@ -161,9 +161,7 @@ def checkDivorceBeforeDeath(individuals, families):
         if families[fam]["DIV"] == "":
             continue
         wife = " ".join(families[fam]["WIFE"])
-        print(wife)
         husband = " ".join(families[fam]["HUSB"])
-        print(husband)
         if individuals[husband]["DEAT"] == "" and individuals[wife]["DEAT"] == "":
             continue
         if (
@@ -217,12 +215,13 @@ def checkDates(individuals,families):
         else:
             if(individuals[indi]["DEAT"]>today):
                 print("Error: Death date cannot come after today's date")
+
 def lessThan150YearsOld(individuals):
     for indi in individuals:
         today = datetime.date.today()
         born = individuals[indi]["BIRT"]
         age = (
-            today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+            (today.year + 100) - born.year - ((today.month, today.day) < (born.month, born.day))
         )
         if age > 150:
             print(
@@ -251,7 +250,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                         individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
-            if (families[fam]["DIV"] != "N/A" and individuals[child[0]]["BIRT"] > families[fam]["DIV"]+relativedelta(months=+9)):
+            if (families[fam]["DIV"] != "" and individuals[child[0]]["BIRT"] > families[fam]["DIV"]+relativedelta(months=+9)):
                 print(
                     "Error: {} and {} divorced on {}, so {} cannot be born on {}".format(
                         husband,
