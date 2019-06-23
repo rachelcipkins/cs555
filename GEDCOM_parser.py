@@ -5,6 +5,7 @@
 import sys
 from prettytable import PrettyTable
 import datetime
+from dateutil.relativedelta import *
 
 validLines = []
 
@@ -127,6 +128,8 @@ def getFamInfo():
     checkGenderForSpouses(individuals, families)
     checkDivorceBeforeDeath(individuals, families)
     checkMaleLastNames(individuals)
+    lessThan150YearsOld(individuals)
+    checkBirthBeforeMarriageOfParents(individuals, families)
     printInfo(individuals, families)
 
 def checkGenderForSpouses(individuals,families):
@@ -198,6 +201,50 @@ def checkDivorceBeforeDeath(individuals, families):
                 )
             )
 
+def lessThan150YearsOld(individuals):
+    for indi in individuals:
+        today = datetime.date.today()
+        born = individuals[indi]["BIRT"]
+        age = (
+            today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+        )
+        if age > 150:
+            print(
+                "Error: {} is older than 150 years old.".format(
+                    indi
+                )
+            )
+
+
+def checkBirthBeforeMarriageOfParents(individuals, families):
+    for fam in families:
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if families[fam]["CHIL"] != []:
+            children = families[fam]["CHIL"]
+        else:
+            continue
+        for child in children:
+            if (individuals[child[0]]["BIRT"] < families[fam]["MARR"]):
+                print(
+                    "Error: {} and {} married on {}, so {} cannot be born on {}".format(
+                        husband,
+                        wife,
+                        families[fam]["MARR"].strftime("%Y-%m-%d"),
+                        child[0],
+                        individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
+                    )
+                )
+            if (families[fam]["DIV"] != "N/A" and individuals[child[0]]["BIRT"] > families[fam]["DIV"]+relativedelta(months=+9)):
+                print(
+                    "Error: {} and {} divorced on {}, so {} cannot be born on {}".format(
+                        husband,
+                        wife,
+                        families[fam]["DIV"].strftime("%Y-%m-%d"),
+                        child[0],
+                        individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
+                    )
+                )
 
 def printInfo(individuals, families):
     # Individuals
