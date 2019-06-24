@@ -224,7 +224,7 @@ def lessThan150YearsOld(individuals):
         age = (
             (today.year + 100) - born.year - ((today.month, today.day) < (born.month, born.day))
         )
-        if individuals[indi]["DEAT"] != "" and age > 150:
+        if death == "" or age > 150:
             print(
                 "Error: {} is older than 150 years old.".format(
                     indi
@@ -235,11 +235,11 @@ def lessThan150YearsOld(individuals):
             (death.year) - born.year - ((death.month, death.day) < (born.month, born.day))
             )
             if age > 150:
-            print(
-                "Error: {} is older than 150 years old.".format(
-                    indi
+                print(
+                    "Error: {} is older than 150 years old.".format(
+                        indi
+                    )
                 )
-            )
 
 
 def checkBirthBeforeMarriageOfParents(individuals, families):
