@@ -147,7 +147,7 @@ def checkMaleLastNames(individuals):
                 continue
             else:
                 print(
-                    "Error: Last name of {} does not match family last name of {}".format(
+                    "Error: US16: Last name of {} does not match family last name of {}".format(
                         indi, family
                     )
                 )
@@ -169,7 +169,7 @@ def checkDivorceBeforeDeath(individuals, families):
             and individuals[husband]["DEAT"] < families[fam]["DIV"]
         ):
             print(
-                "Error: {} died on {}, so he cannot be divorced on {}".format(
+                "Error: US06: {} died on {}, so he cannot be divorced on {}".format(
                     husband,
                     individuals[husband]["DEAT"].strftime("%Y-%m-%d"),
                     families[fam]["DIV"].strftime("%Y-%m-%d"),
@@ -180,7 +180,7 @@ def checkDivorceBeforeDeath(individuals, families):
             and individuals[wife]["DEAT"] < families[fam]["DIV"]
         ):
             print(
-                "Error: {} died on {}, so he cannot be divorced on {}".format(
+                "Error: US06: {} died on {}, so he cannot be divorced on {}".format(
                     wife,
                     individuals[wife]["DEAT"].strftime("%Y-%m-%d"),
                     families[fam]["DIV"].strftime("%Y-%m-%d"),
@@ -193,28 +193,28 @@ def checkGenderForSpouses(individuals,families):
         if (individuals[wife]["SEX"]==['F'] and individuals[husband]["SEX"]==['M']):
             continue
         if(individuals[wife]["SEX"]==['M']):
-            print("Error in family {}: Sex of wife cannot be male".format(fam))
+            print("Error: US21: in family {}: Sex of wife cannot be male".format(fam))
         if(individuals[husband]["SEX"]==['F']):
-            print("Error in family {}: Sex of husband cannot be female".format(fam))
+            print("Error: US21: in family {}: Sex of husband cannot be female".format(fam))
 
 def checkDates(individuals,families):
     today=datetime.datetime.now()
     for fam in families:
         if(families[fam]["MARR"]>today):
-            print("Error: Marriage date cannot come after today's date")
+            print("Error: US01: Marriage date cannot come after today's date")
         if(families[fam]["DIV"]==""):
             continue
         else:
             if families[fam]["DIV"]>today:
-                print("Error: Divorce date cannot come after today's date")
+                print("Error: US01: Divorce date cannot come after today's date")
     for indi in individuals:
         if(individuals[indi]["BIRT"]>today):
-            print("Error: Birth date cannot come after today's date")
+            print("Error: US01: Birth date cannot come after today's date")
         if(individuals[indi]["DEAT"]==""):
             continue
         else:
             if(individuals[indi]["DEAT"]>today):
-                print("Error: Death date cannot come after today's date")
+                print("Error: US01: Death date cannot come after today's date")
 
 def lessThan150YearsOld(individuals):
     for indi in individuals:
@@ -226,7 +226,7 @@ def lessThan150YearsOld(individuals):
         )
         if death == "" or age > 150:
             print(
-                "Error: {} is older than 150 years old.".format(
+                "Error: US07: {} is older than 150 years old.".format(
                     indi
                 )
             )
@@ -236,7 +236,7 @@ def lessThan150YearsOld(individuals):
             )
             if age > 150:
                 print(
-                    "Error: {} is older than 150 years old.".format(
+                    "Error: US07: {} is older than 150 years old.".format(
                         indi
                     )
                 )
@@ -253,7 +253,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
         for child in children:
             if (individuals[child[0]]["BIRT"] < families[fam]["MARR"]):
                 print(
-                    "Error: {} and {} married on {}, so {} cannot be born on {}".format(
+                    "Error: US08: {} and {} married on {}, so {} cannot be born on {}".format(
                         husband,
                         wife,
                         families[fam]["MARR"].strftime("%Y-%m-%d"),
@@ -263,7 +263,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                 )
             if (families[fam]["DIV"] != "" and individuals[child[0]]["BIRT"] > families[fam]["DIV"]+relativedelta(months=+9)):
                 print(
-                    "Error: {} and {} divorced on {}, so {} cannot be born on {}".format(
+                    "Error: US08: {} and {} divorced on {}, so {} cannot be born on {}".format(
                         husband,
                         wife,
                         families[fam]["DIV"].strftime("%Y-%m-%d"),
