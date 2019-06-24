@@ -1,12 +1,15 @@
-Error: I01 died on 2013-12-31, so he cannot be divorced on 2014-01-10
-Error: Last name of I19 does not match family last name of F23
+Error: US06: I01 died on 2013-12-31, so he cannot be divorced on 2014-01-10
+Error: US16: Last name of I19 does not match family last name of F23
+2014-01-10 00:00:00
+Error: US08: I01 and I07 divorced on 2014-01-10, so I19 cannot be born on 2014-12-13
+2014-01-10 00:00:00
 Individuals
 +-----+------------------+--------+------------+-----+-------+------------+-------+--------+
 |  ID |       Name       | Gender |  Birthday  | Age | Alive |   Death    | Child | Spouse |
 +-----+------------------+--------+------------+-----+-------+------------+-------+--------+
-| I01 |   Joe /Smith/    |   M    | 1960-07-15 |  53 | False | 2013-12-31 |       |  F23   |
+| I01 |   Joe /Smith/    |   M    | 1900-07-15 | 113 | False | 2013-12-31 |       |  F23   |
 | I07 | Jennifer /Smith/ |   F    | 1960-09-23 |  58 |  True |            |       |  F23   |
-| I19 |   Dick /Brown/   |   M    | 1981-02-13 |  38 |  True |            |  F23  |        |
+| I19 |   Dick /Brown/   |   M    | 2014-12-13 |  4  |  True |            |  F23  |        |
 | I26 |   Jane /Smith/   |   F    | 1983-06-02 |  36 |  True |            |  F23  |        |
 +-----+------------------+--------+------------+-----+-------+------------+-------+--------+
 
