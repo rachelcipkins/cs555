@@ -221,15 +221,16 @@ def lessThan150YearsOld(individuals):
         today = datetime.date.today()
         born = individuals[indi]["BIRT"]
         death = individuals[indi]["DEAT"]
-        age = (
-            (today.year + 100) - born.year - ((today.month, today.day) < (born.month, born.day))
-        )
-        if death == "" or age > 150:
-            print(
-                "Error: US07: {} is older than 150 years old.".format(
-                    indi
-                )
+        if death == "":
+            age = (
+            (today.year) - born.year - ((today.month, today.day) < (born.month, born.day))
             )
+            if age > 150:
+                print(
+                    "Error: US07: {} is older than 150 years old.".format(
+                        indi
+                    )
+                )
         else:
             age = (
             (death.year) - born.year - ((death.month, death.day) < (born.month, born.day))
