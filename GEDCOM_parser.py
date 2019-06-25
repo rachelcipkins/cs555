@@ -145,7 +145,7 @@ def checkMaleLastNames(individuals):
         try:
             if lastName == familyNames[family]:
                 continue
-            else:
+            else:  cx
                 print(
                     "Error: US16: Last name of {} does not match family last name of {}".format(
                         indi, family
@@ -225,6 +225,7 @@ def lessThan150YearsOld(individuals):
             age = (
             (today.year) - born.year - ((today.month, today.day) < (born.month, born.day))
             )
+
             if age > 150:
                 print(
                     "Error: US07: {} is older than 150 years old.".format(
