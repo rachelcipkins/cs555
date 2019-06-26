@@ -5,7 +5,7 @@
 import sys
 from prettytable import PrettyTable
 import datetime
-from dateutil.relativedelta import *
+
 
 validLines = []
 
@@ -79,6 +79,7 @@ def parse(file):
                 # println(level, tag, valid, args)
                 continue
 
+
 def getFamInfo():
     currentFam = None
     currentIndi = None
@@ -131,6 +132,7 @@ def getFamInfo():
     lessThan150YearsOld(individuals)
     checkBirthBeforeMarriageOfParents(individuals, families)
     printInfo(individuals, families)
+
 
 def checkMaleLastNames(individuals):
     familyNames = {}
@@ -186,35 +188,41 @@ def checkDivorceBeforeDeath(individuals, families):
                     families[fam]["DIV"].strftime("%Y-%m-%d"),
                 )
             )
-def checkGenderForSpouses(individuals,families):
+
+
+def checkGenderForSpouses(individuals, families):
     for fam in families:
         wife = " ".join(families[fam]["WIFE"])
         husband = " ".join(families[fam]["HUSB"])
-        if (individuals[wife]["SEX"]==['F'] and individuals[husband]["SEX"]==['M']):
+        if individuals[wife]["SEX"] == ["F"] and individuals[husband]["SEX"] == ["M"]:
             continue
-        if(individuals[wife]["SEX"]==['M']):
+        if individuals[wife]["SEX"] == ["M"]:
             print("Error: US21: in family {}: Sex of wife cannot be male".format(fam))
-        if(individuals[husband]["SEX"]==['F']):
-            print("Error: US21: in family {}: Sex of husband cannot be female".format(fam))
+        if individuals[husband]["SEX"] == ["F"]:
+            print(
+                "Error: US21: in family {}: Sex of husband cannot be female".format(fam)
+            )
 
-def checkDates(individuals,families):
-    today=datetime.datetime.now()
+
+def checkDates(individuals, families):
+    today = datetime.datetime.now()
     for fam in families:
-        if(families[fam]["MARR"]>today):
+        if families[fam]["MARR"] > today:
             print("Error: US01: Marriage date cannot come after today's date")
-        if(families[fam]["DIV"]==""):
+        if families[fam]["DIV"] == "":
             continue
         else:
-            if families[fam]["DIV"]>today:
+            if families[fam]["DIV"] > today:
                 print("Error: US01: Divorce date cannot come after today's date")
     for indi in individuals:
-        if(individuals[indi]["BIRT"]>today):
+        if individuals[indi]["BIRT"] > today:
             print("Error: US01: Birth date cannot come after today's date")
-        if(individuals[indi]["DEAT"]==""):
+        if individuals[indi]["DEAT"] == "":
             continue
         else:
-            if(individuals[indi]["DEAT"]>today):
+            if individuals[indi]["DEAT"] > today:
                 print("Error: US01: Death date cannot come after today's date")
+
 
 def lessThan150YearsOld(individuals):
     for indi in individuals:
@@ -223,25 +231,21 @@ def lessThan150YearsOld(individuals):
         death = individuals[indi]["DEAT"]
         if death == "":
             age = (
-            (today.year) - born.year - ((today.month, today.day) < (born.month, born.day))
+                (today.year)
+                - born.year
+                - ((today.month, today.day) < (born.month, born.day))
             )
 
             if age > 150:
-                print(
-                    "Error: US07: {} is older than 150 years old.".format(
-                        indi
-                    )
-                )
+                print("Error: US07: {} is older than 150 years old.".format(indi))
         else:
             age = (
-            (death.year) - born.year - ((death.month, death.day) < (born.month, born.day))
+                (death.year)
+                - born.year
+                - ((death.month, death.day) < (born.month, born.day))
             )
             if age > 150:
-                print(
-                    "Error: US07: {} is older than 150 years old.".format(
-                        indi
-                    )
-                )
+                print("Error: US07: {} is older than 150 years old.".format(indi))
 
 
 def checkBirthBeforeMarriageOfParents(individuals, families):
@@ -253,7 +257,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
         else:
             continue
         for child in children:
-            if (individuals[child[0]]["BIRT"] < families[fam]["MARR"]):
+            if individuals[child[0]]["BIRT"] < families[fam]["MARR"]:
                 print(
                     "Error: US08: {} and {} married on {}, so {} cannot be born on {}".format(
                         husband,
@@ -263,7 +267,10 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                         individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
-            if (families[fam]["DIV"] != "" and individuals[child[0]]["BIRT"] > families[fam]["DIV"]+relativedelta(months=+9)):
+            print(families[fam]["DIV"])
+            if families[fam]["DIV"] != "" and individuals[child[0]]["BIRT"] > families[
+                fam
+            ]["DIV"] + datetime.timedelta(6 * 365 / 12):
                 print(
                     "Error: US08: {} and {} divorced on {}, so {} cannot be born on {}".format(
                         husband,
@@ -273,6 +280,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                         individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
+
 
 def printInfo(individuals, families):
     # Individuals
