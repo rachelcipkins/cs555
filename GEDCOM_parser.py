@@ -71,13 +71,9 @@ def parse(file):
                 # println(level, tag, valid, args)
                 continue
             if expectedIndent == level and expectedNumArgs == len(args):
-                # println(level, tag, valid, args)
                 validLines.append({"level": level, "tag": tag, "args": args})
-                continue
             else:
                 valid = "N"
-                # println(level, tag, valid, args)
-                continue
 
 
 def getFamInfo():
@@ -125,13 +121,15 @@ def getFamInfo():
             families[currentFam][tag] = args
         if tag == "CHIL":
             families[currentFam][tag].append(args)
-    checkDates(individuals, families)
+    return individuals, families
+    
+    """ checkDates(individuals, families)
     checkGenderForSpouses(individuals, families)
     checkDivorceBeforeDeath(individuals, families)
     checkMaleLastNames(individuals)
     lessThan150YearsOld(individuals)
     checkBirthBeforeMarriageOfParents(individuals, families)
-    printInfo(individuals, families)
+    printInfo(individuals, families) """
 
 
 def checkMaleLastNames(individuals):
@@ -246,6 +244,7 @@ def lessThan150YearsOld(individuals):
             )
             if age > 150:
                 print("Error: US07: {} is older than 150 years old.".format(indi))
+    return True
 
 
 def checkBirthBeforeMarriageOfParents(individuals, families):
@@ -280,6 +279,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                         individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
+    return True
 
 
 def printInfo(individuals, families):
@@ -380,5 +380,6 @@ if __name__ == "__main__":
     else:
         file = sys.argv[1]
     parse(file)
-    getFamInfo()
+    individuals, families = getFamInfo()
+    printInfo(individuals, families)
 
