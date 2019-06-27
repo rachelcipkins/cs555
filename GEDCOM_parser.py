@@ -74,9 +74,10 @@ def parse(file):
                 validLines.append({"level": level, "tag": tag, "args": args})
             else:
                 valid = "N"
+    return validLines
 
 
-def getFamInfo():
+def getFamInfo(validLines):
     currentFam = None
     currentIndi = None
     individuals = {}
@@ -137,7 +138,7 @@ def checkMaleLastNames(individuals):
         try:
             if lastName == familyNames[family]:
                 continue
-            else:  cx
+            else:
                 print(
                     "Error: US16: Last name of {} does not match family last name of {}".format(
                         indi, family
@@ -258,7 +259,6 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                         individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
-            print(families[fam]["DIV"])
             if families[fam]["DIV"] != "" and individuals[child[0]]["BIRT"] > families[
                 fam
             ]["DIV"] + datetime.timedelta(6 * 365 / 12):
@@ -379,7 +379,7 @@ if __name__ == "__main__":
     else:
         file = sys.argv[1]
     parse(file)
-    individuals, families = getFamInfo()
+    individuals, families = getFamInfo(validLines)
     validation(individuals, families)
     printInfo(individuals, families)
 
