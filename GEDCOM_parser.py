@@ -122,14 +122,6 @@ def getFamInfo():
         if tag == "CHIL":
             families[currentFam][tag].append(args)
     return individuals, families
-    
-    """ checkDates(individuals, families)
-    checkGenderForSpouses(individuals, families)
-    checkDivorceBeforeDeath(individuals, families)
-    checkMaleLastNames(individuals)
-    lessThan150YearsOld(individuals)
-    checkBirthBeforeMarriageOfParents(individuals, families)
-    printInfo(individuals, families) """
 
 
 def checkMaleLastNames(individuals):
@@ -281,6 +273,13 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                 )
     return True
 
+def validation(individuals, families):
+    checkDates(individuals, families)
+    checkGenderForSpouses(individuals, families)
+    checkDivorceBeforeDeath(individuals, families)
+    checkMaleLastNames(individuals)
+    lessThan150YearsOld(individuals)
+    checkBirthBeforeMarriageOfParents(individuals, families)
 
 def printInfo(individuals, families):
     # Individuals
@@ -381,5 +380,6 @@ if __name__ == "__main__":
         file = sys.argv[1]
     parse(file)
     individuals, families = getFamInfo()
+    validation(individuals, families)
     printInfo(individuals, families)
 
