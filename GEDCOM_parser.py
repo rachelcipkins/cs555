@@ -179,6 +179,7 @@ def checkDivorceBeforeDeath(individuals, families):
                     families[fam]["DIV"].strftime("%Y-%m-%d"),
                 )
             )
+    return True
 
 
 def checkGenderForSpouses(individuals, families):
@@ -273,6 +274,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                 )
     return True
 
+
 def validation(individuals, families):
     checkDates(individuals, families)
     checkGenderForSpouses(individuals, families)
@@ -280,6 +282,7 @@ def validation(individuals, families):
     checkMaleLastNames(individuals)
     lessThan150YearsOld(individuals)
     checkBirthBeforeMarriageOfParents(individuals, families)
+
 
 def printInfo(individuals, families):
     # Individuals
