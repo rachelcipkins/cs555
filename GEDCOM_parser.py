@@ -194,6 +194,7 @@ def checkGenderForSpouses(individuals, families):
             print(
                 "Error: US21: in family {}: Sex of husband cannot be female".format(fam)
             )
+    return True
 
 
 def checkDates(individuals, families):
@@ -214,6 +215,7 @@ def checkDates(individuals, families):
         else:
             if individuals[indi]["DEAT"] > today:
                 print("Error: US01: Death date cannot come after today's date")
+    return True
 
 
 def lessThan150YearsOld(individuals):
