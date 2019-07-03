@@ -7,6 +7,8 @@ from GEDCOM_parser import (
     getFamInfo,
     checkMaleLastNames,
     checkDivorceBeforeDeath,
+    noSiblingMarriage,
+    notMarriedToChildren
 )
 
 path = os.path.dirname(__file__)
@@ -39,6 +41,18 @@ class US06Tests(unittest.TestCase):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         self.assertTrue(checkDivorceBeforeDeath(individuals, families))
+
+class US17Tests(unittest.TestCase):
+    def testNoMarriageToChildren(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(notMarriedToChildren(families))
+
+class US18Tests(unittest.TestCase):
+    def testNoSiblingMarriage(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(noSiblingMarriage(individuals, families))
 
 
 if __name__ == "__main__":
