@@ -7,13 +7,10 @@ from GEDCOM_parser import (
     getFamInfo,
     checkMaleLastNames,
     checkDivorceBeforeDeath,
-<<<<<<< HEAD
     noSiblingMarriage,
     notMarriedToChildren
-=======
     checkGenderForSpouses,
     checkDates
->>>>>>> ca142999e65b33fbde79c0fa85df44891ebeb0a6
 )
 
 path = os.path.dirname(__file__)
