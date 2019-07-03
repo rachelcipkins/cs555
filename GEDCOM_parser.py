@@ -121,7 +121,7 @@ def getFamInfo(validLines):
         if tag == "HUSB" or tag == "WIFE":
             families[currentFam][tag] = args
         if tag == "CHIL":
-            families[currentFam][tag].append(args)
+            families[currentFam][tag].append(args[0])
     return individuals, families
 
 
@@ -250,17 +250,17 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
         else:
             continue
         for child in children:
-            if individuals[child[0]]["BIRT"] < families[fam]["MARR"]:
+            if individuals[child]["BIRT"] < families[fam]["MARR"]:
                 print(
                     "Error: US08: {} and {} married on {}, so {} cannot be born on {}".format(
                         husband,
                         wife,
                         families[fam]["MARR"].strftime("%Y-%m-%d"),
-                        child[0],
-                        individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
+                        child,
+                        individuals[child]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
-            if families[fam]["DIV"] != "" and individuals[child[0]]["BIRT"] > families[
+            if families[fam]["DIV"] != "" and individuals[child]["BIRT"] > families[
                 fam
             ]["DIV"] + datetime.timedelta(6 * 365 / 12):
                 print(
@@ -268,11 +268,64 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                         husband,
                         wife,
                         families[fam]["DIV"].strftime("%Y-%m-%d"),
-                        child[0],
-                        individuals[child[0]]["BIRT"].strftime("%Y-%m-%d"),
+                        child,
+                        individuals[child]["BIRT"].strftime("%Y-%m-%d"),
                     )
                 )
     return True
+
+def notMarriedToChildren(families):
+    for fam in families:
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if families[fam]["CHIL"] == []:
+            continue
+        else:
+          children = families[fam]["CHIL"]
+        for child in children:
+            if child == wife:
+                print(
+                    "Error: US17: Child {} is wife of father {}.".format(
+                        child,
+                        husband,
+                    )
+                )
+            if child == husband:
+                print(
+                    "Error: US17: Child {} is husband of mother {}.".format(
+                        child,
+                        wife,
+                    )
+                )
+    return True
+
+def noSiblingMarriage(individuals, families):
+    for fam in families:
+        if families[fam]["CHIL"] == []:
+            continue
+        else:
+            children = families[fam]["CHIL"]
+            siblings = list(indiv for indiv in individuals if indiv in children)
+            for sibling in siblings:
+                for family in families:
+                    wife = " ".join(families[family]["WIFE"])
+                    husband = " ".join(families[family]["HUSB"])
+                    if sibling == wife and husband in siblings:
+                        print(
+                            "Error: US18: Siblings {} and {} cannot be married.".format(
+                                wife,
+                                husband
+                            )
+                        )
+                    elif sibling == husband and wife in siblings:
+                        print(
+                            "Error: US18: Siblings {} and {} cannot be married.".format(
+                                wife,
+                                husband
+                            )
+                        )
+    return True
+
 
 
 def validation(individuals, families):
@@ -282,6 +335,8 @@ def validation(individuals, families):
     checkMaleLastNames(individuals)
     lessThan150YearsOld(individuals)
     checkBirthBeforeMarriageOfParents(individuals, families)
+    notMarriedToChildren(families)
+    noSiblingMarriage(individuals, families)
 
 
 def printInfo(individuals, families):
