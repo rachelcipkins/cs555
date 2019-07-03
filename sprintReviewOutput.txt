@@ -1,0 +1,25 @@
+Error: US01: Marriage date cannot come after today's date
+Error: US01: Divorce date cannot come after today's date
+Error: US01: Death date cannot come after today's date
+Error: US21: in family F23: Sex of wife cannot be male
+Error: US06: I01 died on 3000-12-31, so he cannot be divorced on 3001-06-01
+Error: US16: Last name of I19 does not match family last name of F23
+Error: US07: I01 is older than 150 years old.
+Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
+Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
+Individuals
++-----+------------------+--------+------------+------+-------+------------+-------+--------+
+|  ID |       Name       | Gender |  Birthday  | Age  | Alive |   Death    | Child | Spouse |
++-----+------------------+--------+------------+------+-------+------------+-------+--------+
+| I01 |   Joe /Smith/    |   M    | 1900-07-15 | 1100 | False | 3000-12-31 |       |  F23   |
+| I07 | Jennifer /Smith/ |   M    | 1960-09-23 |  58  |  True |            |       |  F23   |
+| I19 |   Dick /Brown/   |   M    | 1981-02-13 |  38  |  True |            |  F23  |        |
+| I26 |   Jane /Smith/   |   F    | 1983-06-02 |  36  |  True |            |  F23  |        |
++-----+------------------+--------+------------+------+-------+------------+-------+--------+
+
+Families
++-----+------------+------------+------------+--------------+---------+------------------+--------------------+
+|  ID |  Married   |  Divorced  | Husband ID | Husband Name | Wife ID |    Wife Name     |      Children      |
++-----+------------+------------+------------+--------------+---------+------------------+--------------------+
+| F23 | 2080-02-14 | 3001-06-01 |    I01     | Joe /Smith/  |   I07   | Jennifer /Smith/ | [['I19'], ['I26']] |
++-----+------------+------------+------------+--------------+---------+------------------+--------------------+
