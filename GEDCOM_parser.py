@@ -197,6 +197,31 @@ def checkGenderForSpouses(individuals, families):
     return True
 
 
+def uniqueDOBandName(individuals):
+    allUnique = True
+    unique = set()
+    for indi in individuals:
+        nameDOB = " ".join(individuals[indi]["NAME"]) + individuals[indi]["BIRT"].strftime("%Y-%m-%d")
+        if nameDOB in unique:
+            allUnique = False
+            print("Error: US23: Individual {} does not have a unique DOB and Name".format(indi))
+        else:
+            unique.add(nameDOB)
+    return allUnique
+
+def listLivingSingleAndMarried(individuals):
+    livingSingle = []
+    livingMarried = []
+    for indi in individuals:
+        if individuals[indi]["DEAT"] == "" and individuals[indi]["FAMS"] == "":
+            livingSingle.append(indi)
+        if individuals[indi]["DEAT"] == "" and individuals[indi]["FAMS"] != "":
+            livingMarried.append(indi)
+    print("US30: All Living Married: " + str(livingMarried))
+    print("US31: All Living Single: " + str(livingSingle))
+    return livingMarried, livingSingle
+
+
 def checkDates(individuals, families):
     today = datetime.datetime.now()
     for fam in families:
@@ -276,6 +301,7 @@ def checkBirthBeforeMarriageOfParents(individuals, families):
                 )
     return True
 
+
 def notMarriedToChildren(families):
     for fam in families:
         wife = " ".join(families[fam]["WIFE"])
@@ -283,23 +309,18 @@ def notMarriedToChildren(families):
         if families[fam]["CHIL"] == []:
             continue
         else:
-          children = families[fam]["CHIL"]
+            children = families[fam]["CHIL"]
         for child in children:
             if child == wife:
                 print(
-                    "Error: US17: Child {} is wife of father {}.".format(
-                        child,
-                        husband,
-                    )
+                    "Error: US17: Child {} is wife of father {}.".format(child, husband)
                 )
             if child == husband:
                 print(
-                    "Error: US17: Child {} is husband of mother {}.".format(
-                        child,
-                        wife,
-                    )
+                    "Error: US17: Child {} is husband of mother {}.".format(child, wife)
                 )
     return True
+
 
 def noSiblingMarriage(individuals, families):
     for fam in families:
@@ -315,19 +336,16 @@ def noSiblingMarriage(individuals, families):
                     if sibling == wife and husband in siblings:
                         print(
                             "Error: US18: Siblings {} and {} cannot be married.".format(
-                                wife,
-                                husband
+                                wife, husband
                             )
                         )
                     elif sibling == husband and wife in siblings:
                         print(
                             "Error: US18: Siblings {} and {} cannot be married.".format(
-                                wife,
-                                husband
+                                wife, husband
                             )
                         )
     return True
-
 
 
 def validation(individuals, families):
@@ -339,6 +357,8 @@ def validation(individuals, families):
     checkBirthBeforeMarriageOfParents(individuals, families)
     notMarriedToChildren(families)
     noSiblingMarriage(individuals, families)
+    listLivingSingleAndMarried(individuals)
+    uniqueDOBandName(individuals)
 
 
 def printInfo(individuals, families):
