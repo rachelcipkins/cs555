@@ -8,9 +8,11 @@ from GEDCOM_parser import (
     checkMaleLastNames,
     checkDivorceBeforeDeath,
     noSiblingMarriage,
-    notMarriedToChildren
+    notMarriedToChildren,
     checkGenderForSpouses,
-    checkDates
+    checkDates,
+    listLivingSingleAndMarried,
+    uniqueDOBandName
 )
 
 path = os.path.dirname(__file__)
@@ -22,6 +24,20 @@ class US07Tests(unittest.TestCase):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         self.assertTrue(lessThan150YearsOld(individuals))
+
+class US23Tests(unittest.TestCase):
+    def testUniqueDOBandName(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(uniqueDOBandName(individuals))
+
+class US30and31Tests(unittest.TestCase):
+    def testListLivingMarriedandSignle(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        married, single = listLivingSingleAndMarried(individuals)
+        self.assertTrue(married == ["I07"])
+        self.assertTrue(single == ["I19", "I26"])
 
 
 class US08Tests(unittest.TestCase):
@@ -44,29 +60,33 @@ class US06Tests(unittest.TestCase):
         individuals, families = getFamInfo(valid)
         self.assertTrue(checkDivorceBeforeDeath(individuals, families))
 
+
 class US17Tests(unittest.TestCase):
     def testNoMarriageToChildren(self):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         self.assertTrue(notMarriedToChildren(families))
 
+
 class US18Tests(unittest.TestCase):
     def testNoSiblingMarriage(self):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         self.assertTrue(noSiblingMarriage(individuals, families))
-        
+
+
 class US01Tests(unittest.TestCase):
     def testCheckDates(self):
-        valid=parse(testFile)
-        individuals,families=getFamInfo(valid)
-        self.assertTrue(checkDates(individuals,families))
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(checkDates(individuals, families))
+
 
 class US21Tests(unittest.TestCase):
     def testCheckGenderForSpouses(self):
-        valid=parse(testFile)
-        individuals,families=getFamInfo(valid)
-        self.assertTrue(checkGenderForSpouses(individuals,families))
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(checkGenderForSpouses(individuals, families))
 
 
 if __name__ == "__main__":
