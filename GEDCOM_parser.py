@@ -347,6 +347,21 @@ def noSiblingMarriage(individuals, families):
                         )
     return True
 
+def deathBeforeBirth(individuals):
+    for indi in individuals:
+        if(individuals[indi]["DEAT"]==""):
+            continue
+        if(individuals[indi]["BIRT"]>individuals[indi]["DEAT"]):
+            print("Error: US03: Individual {} cannot have death date come before birth date".format(indi))
+    return True
+
+def fewerThanFifteen(families):
+    for fam in families:
+        if (len(families[fam]["CHIL"])>=15):
+            print("Error: US15: Family {} cannot have 15 or more children.".format(fam))
+    return True
+
+
 
 def validation(individuals, families):
     checkDates(individuals, families)
@@ -359,6 +374,8 @@ def validation(individuals, families):
     noSiblingMarriage(individuals, families)
     listLivingSingleAndMarried(individuals)
     uniqueDOBandName(individuals)
+    deathBeforeBirth(individuals)
+    fewerThanFifteen(families)
 
 
 def printInfo(individuals, families):

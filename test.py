@@ -12,7 +12,9 @@ from GEDCOM_parser import (
     checkGenderForSpouses,
     checkDates,
     listLivingSingleAndMarried,
-    uniqueDOBandName
+    uniqueDOBandName,
+    deathBeforeBirth,
+    fewerThanFifteen
 )
 
 path = os.path.dirname(__file__)
@@ -88,6 +90,17 @@ class US21Tests(unittest.TestCase):
         individuals, families = getFamInfo(valid)
         self.assertTrue(checkGenderForSpouses(individuals, families))
 
+class US03Tests(unittest.TestCase):
+    def testDeathBeforeBirth(self):
+        valid=parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(deathBeforeBirth(individuals))
+
+class US15Tests(unittest.TestCase):
+    def testFewerThanFifteen(self):
+        valid=parse(testFile)
+        individuals, families=getFamInfo(valid)
+        self.assertTrue(fewerThanFifteen(families))
 
 if __name__ == "__main__":
     unittest.main()  # run all tests
