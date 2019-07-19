@@ -441,6 +441,29 @@ def checkMultipleBirths(individuals, families):
             print("Error: US14: Family {} has more than 5 childrem born on same day".format(fam))
     return True
 
+def checkMarriageAfterBirth(individuals, families):
+    for fam in families:
+        wife="".join(families[fam]["WIFE"])
+        husband="".join(families[fam]["HUSB"])
+        marrDate=families[fam]["MARR"]
+        if(individuals[wife]["BIRT"]>marrDate):
+            print("Error: US02: Individual {} is married before birth".format(wife))
+        if(individuals[husband]["BIRT"]>marrDate):
+            print("Error: US02: Individual {} is married before birth".format(husband))
+    return True
+
+def recentDeaths(individuals):
+    recent=[]
+    for indi in individuals:
+        if individuals[indi]["DEAT"]=="":
+            continue;
+        today = datetime.date.today()
+        thirtyDaysAgo=today-datetime.timedelta(days=30)
+        if(individuals[indi]["DEAT"].date()<=today and individuals[indi]["DEAT"].date()>=thirtyDaysAgo):
+            recent.append(indi)
+    print("Individuals that have died recently: "+str(recent))
+    return True;
+
 
 def validation(individuals, families):
     checkDates(individuals, families)
@@ -459,7 +482,9 @@ def validation(individuals, families):
     orderSiblingsByAge(families, individuals)
     listUpcomingBday(individuals)
     listUpcomingAniv(families)
+    recentDeaths(individuals)
     checkMultipleBirths(individuals,families)
+    checkMarriageAfterBirth(individuals, families)
 
 
 def printInfo(individuals, families):
