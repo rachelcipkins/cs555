@@ -14,7 +14,9 @@ from GEDCOM_parser import (
     listLivingSingleAndMarried,
     uniqueDOBandName,
     deathBeforeBirth,
-    fewerThanFifteen
+    fewerThanFifteen,
+    listDeceased,
+    orderSiblingsByAge
 )
 
 path = os.path.dirname(__file__)
@@ -101,6 +103,19 @@ class US15Tests(unittest.TestCase):
         valid=parse(testFile)
         individuals, families=getFamInfo(valid)
         self.assertTrue(fewerThanFifteen(families))
+
+class US28Tests(unittest.TestCase):
+    def testOrderSiblingsByAge(self):
+        valid=parse(testFile)
+        individuals, families=getFamInfo(valid)
+        self.assertTrue(orderSiblingsByAge(families, individuals))
+
+class US29Tests(unittest.TestCase):
+    def testListDeceased(self):
+        valid=parse(testFile)
+        individuals, families=getFamInfo(valid)
+        self.assertTrue(listDeceased(individuals))
+
 
 if __name__ == "__main__":
     unittest.main()  # run all tests
