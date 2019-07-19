@@ -392,11 +392,54 @@ def orderSiblingsByAge(families, individuals):
                     )
                 ages.append((child, age))
         sorted(ages, key = lambda x: x[1], reverse = True)
-        print("Siblings of fam {} ordered by age:", fam)
+        print("Siblings of fam {} ordered by age:".format(fam))
         for age in ages:
             print(age[0])
     return True
-                
+
+def listUpcomingBday(individuals):
+    upcoming = []
+    today = datetime.datetime.today()
+    for indi in individuals:
+        if(today.month == 12 and individuals[indi]["BIRT"].month == 1):
+            next_bday = individuals[indi]["BIRT"].replace(year = today.year+1)
+        else:
+            next_bday = individuals[indi]["BIRT"].replace(year = today.year)
+        delta = next_bday - today
+        if(delta.days < 30 and delta.days >= 0):
+            upcoming.append(indi)
+    print("Individuals with upcoming birthdays: " + str(upcoming))
+    return True
+
+
+def listUpcomingAniv(families):
+    upcoming = []
+    today = datetime.datetime.today()
+    for fam in families:
+        if(families[fam]["MARR"] == ''):
+            continue
+        if(today.month == 12 and families[fam]["MARR"].month == 1):
+            next_aniv = families[fam]["MARR"].replace(year = today.year+1)
+        else:
+            next_aniv = families[fam]["MARR"].replace(year = today.year)
+        delta = next_aniv - today
+        if(delta.days < 30 and delta.days >= 0):
+            upcoming.append(fam)
+    print("Families with upcoming Anniversaries: " + str(upcoming))
+    return True
+
+def checkMultipleBirths(individuals, families):
+    for fam in families:
+        count = 0
+        bdays = []
+        for child in families[fam]["CHIL"]:
+            if individuals[child]["BIRT"].strftime("%Y-%m-%d") in bdays:
+                count += 1
+            else:
+                bdays.append(individuals[child]["BIRT"].strftime("%Y-%m-%d"))
+        if count >= 5:
+            print("Error: US14: Family {} has more than 5 childrem born on same day".format(fam))
+    return True
 
 
 def validation(individuals, families):
@@ -414,6 +457,9 @@ def validation(individuals, families):
     fewerThanFifteen(families)
     listDeceased(individuals)
     orderSiblingsByAge(families, individuals)
+    listUpcomingBday(individuals)
+    listUpcomingAniv(families)
+    checkMultipleBirths(individuals,families)
 
 
 def printInfo(individuals, families):
