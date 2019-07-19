@@ -361,6 +361,42 @@ def fewerThanFifteen(families):
             print("Error: US15: Family {} cannot have 15 or more children.".format(fam))
     return True
 
+def listDeceased(individuals):
+    for indi in individuals:
+        if(individuals[indi]["DEAT"] != ""):
+            print("Deceased: ", indi)
+    return True
+
+def orderSiblingsByAge(families, individuals):
+    for fam in families:
+        ages = []
+        if families[fam]["CHIL"] == []:
+            continue
+        else:
+            children = families[fam]["CHIL"]
+            for child in children:
+                today = datetime.date.today()
+                born = individuals[child]["BIRT"]
+                death = individuals[child]["DEAT"]
+                if death == "":
+                    age = (
+                        (today.year)
+                        - born.year
+                        - ((today.month, today.day) < (born.month, born.day))
+                    )
+                else:
+                    age = (
+                        (death.year)
+                        - born.year
+                        - ((death.month, death.day) < (born.month, born.day))
+                    )
+                ages.append((child, age))
+        sorted(ages, key = lambda x: x[1], reverse = True)
+        print("Siblings of fam {} ordered by age:", fam)
+        for age in ages:
+            print(age[0])
+    return True
+                
 
 
 def validation(individuals, families):
@@ -376,6 +412,8 @@ def validation(individuals, families):
     uniqueDOBandName(individuals)
     deathBeforeBirth(individuals)
     fewerThanFifteen(families)
+    listDeceased(individuals)
+    orderSiblingsByAge(families, individuals)
 
 
 def printInfo(individuals, families):
