@@ -16,7 +16,10 @@ from GEDCOM_parser import (
     deathBeforeBirth,
     fewerThanFifteen,
     listDeceased,
-    orderSiblingsByAge
+    orderSiblingsByAge,
+    listUpcomingAniv,
+    listUpcomingBday,
+    checkMultipleBirths
 )
 
 path = os.path.dirname(__file__)
@@ -28,6 +31,25 @@ class US07Tests(unittest.TestCase):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         self.assertTrue(lessThan150YearsOld(individuals))
+
+class US38Tests(unittest.TestCase):
+    def testUpcomingBday(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(listUpcomingBday(individuals))
+
+class US14Tests(unittest.TestCase):
+    def testMultBirths(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(checkMultipleBirths(individuals,families))
+
+
+class US39Tests(unittest.TestCase):
+    def testUpcomingAniv(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(listUpcomingAniv(families))
 
 class US23Tests(unittest.TestCase):
     def testUniqueDOBandName(self):
