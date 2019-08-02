@@ -106,7 +106,10 @@ def getFamInfo(validLines):
             continue
         if tag in ["BIRT", "DEAT"]:
             date = " ".join(validLines[lineNum + 1]["args"])
-            individuals[currentIndi][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            try:
+                individuals[currentIndi][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            except ValueError:
+                print("Error: US12: Illigitimate date {} provided.".format(date))
             continue
         # New family, tags below are associated w families
         if tag == "FAM":
@@ -116,7 +119,10 @@ def getFamInfo(validLines):
             continue
         if tag == "MARR" or tag == "DIV":
             date = " ".join(validLines[lineNum + 1]["args"])
-            families[currentFam][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            try:
+                families[currentFam][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            except ValueError:
+                print("Error: US12: Illigitimate date {} provided.".format(date))
             continue
         if tag == "HUSB" or tag == "WIFE":
             families[currentFam][tag] = args
@@ -505,6 +511,9 @@ def listRecentBirths(individuals):
             recent.append(indi)
     print("Individuals that have been born recently: "+str(recent))
     return True
+
+def illigitimateDates(individuals, families):
+    birt deat marr div
 
 def validation(individuals, families):
     checkDates(individuals, families)
