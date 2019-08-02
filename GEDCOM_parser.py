@@ -464,6 +464,36 @@ def recentDeaths(individuals):
     print("Individuals that have died recently: "+str(recent))
     return True;
 
+def checkBirthBeforeDeathofParents(individuals, families):
+    for fam in families:
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if families[fam]["CHIL"] != []:
+            children = families[fam]["CHIL"]
+        else:
+            continue
+        for child in children:
+            if individuals[wife]["DEAT"] != "":
+                if individuals[child]["BIRT"] > individuals[wife]["DEAT"]:
+                    print(
+                    "Error: US09: {} died on {}, so {} cannot be born on {}".format(
+                        wife,
+                        individuals[wife]["DEAT"],
+                        child,
+                        individuals[child]["BIRT"].strftime("%Y-%m-%d"),
+                    )
+                )
+            if individuals[husband]["DEAT"] != "":
+                if individuals[child]["BIRT"] > individuals[husband]["DEAT"] + datetime.timedelta(6 * 365 / 12):
+                    print(
+                    "Error: US09: {} died on {}, so {} cannot be born on {}".format(
+                        husband,
+                        individuals[husband]["DEAT"],
+                        child,
+                        individuals[child]["BIRT"].strftime("%Y-%m-%d"),
+                    )
+                )         
+    return True
 
 def validation(individuals, families):
     checkDates(individuals, families)
@@ -485,6 +515,7 @@ def validation(individuals, families):
     recentDeaths(individuals)
     checkMultipleBirths(individuals,families)
     checkMarriageAfterBirth(individuals, families)
+    checkBirthBeforeDeathofParents(individuals, families)
 
 
 def printInfo(individuals, families):
