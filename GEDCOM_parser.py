@@ -495,6 +495,16 @@ def checkBirthBeforeDeathofParents(individuals, families):
                 )         
     return True
 
+def listRecentBirths(individuals):
+    recent=[]
+    for indi in individuals:
+        today = datetime.date.today()
+        thirtyDaysAgo = today - datetime.timedelta(days=30)
+        if individuals[indi]["BIRT"].date() >= thirtyDaysAgo:
+            recent.append(indi)
+    print("Individuals that have died recently: "+str(recent))
+    return True
+
 def validation(individuals, families):
     checkDates(individuals, families)
     checkGenderForSpouses(individuals, families)
