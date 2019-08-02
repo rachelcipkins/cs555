@@ -473,12 +473,13 @@ def checkBirthBeforeDeathofParents(individuals, families):
         else:
             continue
         for child in children:
+            print(individuals[wife]["DEAT"])
             if individuals[wife]["DEAT"] != "":
                 if individuals[child]["BIRT"] > individuals[wife]["DEAT"]:
                     print(
                     "Error: US09: {} died on {}, so {} cannot be born on {}".format(
                         wife,
-                        individuals[wife]["DEAT"],
+                        individuals[wife]["DEAT"].strftime("%Y-%m-%d"),
                         child,
                         individuals[child]["BIRT"].strftime("%Y-%m-%d"),
                     )
@@ -488,7 +489,7 @@ def checkBirthBeforeDeathofParents(individuals, families):
                     print(
                     "Error: US09: {} died on {}, so {} cannot be born on {}".format(
                         husband,
-                        individuals[husband]["DEAT"],
+                        individuals[husband]["DEAT"].strftime("%Y-%m-%d"),
                         child,
                         individuals[child]["BIRT"].strftime("%Y-%m-%d"),
                     )
@@ -502,7 +503,7 @@ def listRecentBirths(individuals):
         thirtyDaysAgo = today - datetime.timedelta(days=30)
         if individuals[indi]["BIRT"].date() >= thirtyDaysAgo:
             recent.append(indi)
-    print("Individuals that have died recently: "+str(recent))
+    print("Individuals that have been born recently: "+str(recent))
     return True
 
 def validation(individuals, families):
