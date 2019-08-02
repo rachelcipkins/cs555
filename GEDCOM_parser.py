@@ -526,6 +526,7 @@ def validation(individuals, families):
     checkMultipleBirths(individuals,families)
     checkMarriageAfterBirth(individuals, families)
     checkBirthBeforeDeathofParents(individuals, families)
+    listRecentBirths(individuals)
 
 
 def printInfo(individuals, families):

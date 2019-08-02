@@ -21,7 +21,9 @@ from GEDCOM_parser import (
     listUpcomingBday,
     checkMultipleBirths,
     checkMarriageAfterBirth,
-    recentDeaths
+    recentDeaths,
+    checkBirthBeforeDeathofParents,
+    listRecentBirths
 )
 
 path = os.path.dirname(__file__)
@@ -151,6 +153,18 @@ class US36Tests(unittest.TestCase):
         valid=parse(testFile)
         individuals, families=getFamInfo(valid)
         self.assertTrue(recentDeaths(individuals))
+
+class US09Tests(unittest.TestCase):
+    def testBirthBeforeDeathOfParents(self):
+        valid=parse(testFile)
+        individuals, families=getFamInfo(valid)
+        self.assertTrue(checkBirthBeforeDeathofParents(individuals, families))
+
+class US35Tests(unittest.TestCase):
+    def testRecentDeaths(self):
+        valid=parse(testFile)
+        individuals, families=getFamInfo(valid)
+        self.assertTrue(listRecentBirths(individuals))
 
 
 if __name__ == "__main__":
