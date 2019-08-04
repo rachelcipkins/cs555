@@ -529,6 +529,30 @@ def parentsNotOld(individuals,families):
             if motherDiff.days / 365 >= maxAgeM:
                 print("Error: US12: Mother in family {} is more than 60 years older than child {}".format(fam,child))
     return True
+
+def marriageBeforeDivorce(families):
+    for fam in families:
+        if families[fam]["DIV"] == "":
+            continue
+        if families[fam]["DIV"]<families[fam]["MARR"]:
+            print("Error: US04: Family {} cannot have divorce date before marriage date".format(fam))
+    return True
+
+def marriageBeforeDeath(individuals, families):
+    for fam in families:
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if(individuals[wife]["DEAT"]=="" and individuals[husband]["DEAT"]==""):
+            continue
+        if(individuals[wife]["DEAT"]!=""):
+            if(individuals[wife]["DEAT"]<families[fam]["MARR"]):
+                print("Error: US05: Wife {} in family {} cannot die before marriage".format(wife,fam))
+        if(individuals[husband]["DEAT"]!=""):
+            if(individuals[husband]["DEAT"]<families[fam]["MARR"]):
+                print("Error: US05: Husband {} in family {} cannot die before marriage".format(husband,fam))
+    return True
+            
+
             
 def validation(individuals, families):
     checkDates(individuals, families)
@@ -553,7 +577,8 @@ def validation(individuals, families):
     checkBirthBeforeDeathofParents(individuals, families)
     listRecentBirths(individuals),
     parentsNotOld(individuals,families)
-
+    marriageBeforeDivorce(families)
+    marriageBeforeDeath(individuals, families)
 
 def printInfo(individuals, families):
     # Individuals
