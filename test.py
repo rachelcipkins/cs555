@@ -23,7 +23,8 @@ from GEDCOM_parser import (
     checkMarriageAfterBirth,
     recentDeaths,
     checkBirthBeforeDeathofParents,
-    listRecentBirths
+    listRecentBirths,
+    parentsNotOld
 )
 
 path = os.path.dirname(__file__)
@@ -32,6 +33,13 @@ testFile = os.path.relpath("testGEDCOM.ged", path)
 
 class US07Tests(unittest.TestCase):
     def testLessThan150YearsOld(self):
+        valid = parse(testFile)
+        individuals, families = getFamInfo(valid)
+        self.assertTrue(parentsNotOld(individuals,families))
+
+
+class US12Tests(unittest.TestCase):
+    def testParentsTooOld(self):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         self.assertTrue(lessThan150YearsOld(individuals))
@@ -66,8 +74,8 @@ class US30and31Tests(unittest.TestCase):
         valid = parse(testFile)
         individuals, families = getFamInfo(valid)
         married, single = listLivingSingleAndMarried(individuals)
-        self.assertTrue(married == ["I26"])
-        self.assertTrue(single == ["I19", "I26"])
+        self.assertTrue(married == ["I01"])
+        self.assertTrue(single == ["I19"])
 
 
 class US08Tests(unittest.TestCase):

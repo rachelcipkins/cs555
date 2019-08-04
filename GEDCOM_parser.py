@@ -512,9 +512,24 @@ def listRecentBirths(individuals):
     print("Individuals that have been born recently: "+str(recent))
     return True
 
-def illigitimateDates(individuals, families):
-    birt deat marr div
-
+def parentsNotOld(individuals,families):
+    maxAgeM = 80
+    maxAgeF = 60
+    today = datetime.date.today()
+    for fam in families:
+        husbandBirth = individuals[" ".join(families[fam]["HUSB"])]["BIRT"]
+        wifeBirth = individuals[" ".join(families[fam]["WIFE"])]["BIRT"]
+        children = families[fam]['CHIL']
+        for child in children:
+            childBirth = individuals[child]["BIRT"]
+            fatherDiff = childBirth - husbandBirth
+            motherDiff = childBirth - wifeBirth
+            if fatherDiff.days / 365 >= maxAgeM:
+                print("Error: US12: Father in family {} is more than 80 years older than child {}".format(fam,child))
+            if motherDiff.days / 365 >= maxAgeM:
+                print("Error: US12: Mother in family {} is more than 60 years older than child {}".format(fam,child))
+    return True
+            
 def validation(individuals, families):
     checkDates(individuals, families)
     checkGenderForSpouses(individuals, families)
@@ -536,7 +551,8 @@ def validation(individuals, families):
     checkMultipleBirths(individuals,families)
     checkMarriageAfterBirth(individuals, families)
     checkBirthBeforeDeathofParents(individuals, families)
-    listRecentBirths(individuals)
+    listRecentBirths(individuals),
+    parentsNotOld(individuals,families)
 
 
 def printInfo(individuals, families):
