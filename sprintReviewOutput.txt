@@ -1,43 +1,83 @@
-Error: US01: Marriage date cannot come after today's date
-Error: US01: Divorce date cannot come after today's date
 Error: US01: Birth date cannot come after today's date
 Error: US01: Death date cannot come after today's date
-Error: US21: in family F23: Sex of wife cannot be male
-Error: US06: I01 died on 3000-12-31, so he cannot be divorced on 3001-06-01
 Error: US16: Last name of I19 does not match family last name of F23
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
-Error: US08: I01 and I07 married on 2080-02-14, so I19 cannot be born on 1981-02-13
-Error: US08: I01 and I07 married on 2080-02-14, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US08: I19 and I26 married on 1990-07-28, so I19 cannot be born on 1981-02-13
+Error: US08: I19 and I26 married on 1990-07-28, so I26 cannot be born on 1983-06-02
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US17: Child I19 is husband of mother I26.
+Error: US17: Child I26 is wife of father I19.
+Error: US18: Siblings I26 and I19 cannot be married.
+Error: US18: Siblings I26 and I19 cannot be married.
 US30: All Living Married: ['I07']
-US31: All Living Single: ['I19', 'I26']
-Error: US03: Individual I01 cannot have death date come before birth date
+US31: All Living Single: ['I19', 'I26', 'I28']
+Error: US23: Individual I28 does not have a unique DOB and Name
+Error: US03: Individual I05 cannot have death date come before birth date
 Error: US15: Family F23 cannot have 15 or more children.
+Deceased:  I01
+Deceased:  I05
+Siblings of fam F23 ordered by age:
+I19
+I26
+I19
+I26
+I19
+I26
+I19
+I26
+I19
+I26
+I19
+I26
+I19
+I26
+I19
+I26
+Individuals with upcoming birthdays: ['I01', 'I05']
+Families with upcoming Anniversaries: ['F23']
+Individuals that have died recently: []
+Error: US14: Family F23 has more than 5 childrem born on same day
 Individuals
 +-----+------------------+--------+------------+-----+-------+------------+-------+--------+
 |  ID |       Name       | Gender |  Birthday  | Age | Alive |   Death    | Child | Spouse |
 +-----+------------------+--------+------------+-----+-------+------------+-------+--------+
-| I01 |   Joe /Smith/    |   M    | 3001-07-15 |  -1 | False | 3000-12-31 |       |  F23   |
+| I01 |   Joe /Smith/    |   M    | 1950-07-25 |  63 | False | 2013-12-31 |       |  F23   |
+| I05 |   Jack /Smith/   |   M    | 3001-07-25 |  -1 | False | 3000-12-31 |  F23  |        |
 | I07 | Jennifer /Smith/ |   M    | 1960-09-23 |  58 |  True |            |       |  F23   |
 | I19 |   Dick /Brown/   |   M    | 1981-02-13 |  38 |  True |            |  F23  |        |
 | I26 |   Jane /Smith/   |   F    | 1983-06-02 |  36 |  True |            |  F23  |        |
+| I28 |   Jane /Smith/   |        | 1983-06-02 |  36 |  True |            |       |        |
 +-----+------------------+--------+------------+-----+-------+------------+-------+--------+
 
 Families
-+-----+------------+------------+------------+--------------+---------+------------------+------------------------------------------------------------------------------------------------------------------+
-|  ID |  Married   |  Divorced  | Husband ID | Husband Name | Wife ID |    Wife Name     |                                                     Children                                                     |
-+-----+------------+------------+------------+--------------+---------+------------------+------------------------------------------------------------------------------------------------------------------+
-| F23 | 2080-02-14 | 3001-06-01 |    I01     | Joe /Smith/  |   I07   | Jennifer /Smith/ | ['I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26'] |
-+-----+------------+------------+------------+--------------+---------+------------------+------------------------------------------------------------------------------------------------------------------+
++-----+------------+------------+------------+--------------+---------+--------------+------------------------------------------------------------------------------------------------------------------+
+|  ID |  Married   |  Divorced  | Husband ID | Husband Name | Wife ID |  Wife Name   |                                                     Children                                                     |
++-----+------------+------------+------------+--------------+---------+--------------+------------------------------------------------------------------------------------------------------------------+
+| F23 | 1990-07-28 | 2019-06-15 |    I19     | Dick /Brown/ |   I26   | Jane /Smith/ | ['I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26', 'I19', 'I26'] |
++-----+------------+------------+------------+--------------+---------+--------------+------------------------------------------------------------------------------------------------------------------+

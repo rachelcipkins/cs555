@@ -106,7 +106,10 @@ def getFamInfo(validLines):
             continue
         if tag in ["BIRT", "DEAT"]:
             date = " ".join(validLines[lineNum + 1]["args"])
-            individuals[currentIndi][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            try:
+                individuals[currentIndi][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            except ValueError:
+                print("Error: US12: Illigitimate date {} provided.".format(date))
             continue
         # New family, tags below are associated w families
         if tag == "FAM":
@@ -116,7 +119,10 @@ def getFamInfo(validLines):
             continue
         if tag == "MARR" or tag == "DIV":
             date = " ".join(validLines[lineNum + 1]["args"])
-            families[currentFam][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            try:
+                families[currentFam][tag] = datetime.datetime.strptime(date, "%d %b %Y")
+            except ValueError:
+                print("Error: US12: Illigitimate date {} provided.".format(date))
             continue
         if tag == "HUSB" or tag == "WIFE":
             families[currentFam][tag] = args
@@ -464,7 +470,66 @@ def recentDeaths(individuals):
     print("Individuals that have died recently: "+str(recent))
     return True;
 
+def checkBirthBeforeDeathofParents(individuals, families):
+    for fam in families:
+        wife = " ".join(families[fam]["WIFE"])
+        husband = " ".join(families[fam]["HUSB"])
+        if families[fam]["CHIL"] != []:
+            children = families[fam]["CHIL"]
+        else:
+            continue
+        for child in children:
+            print(individuals[wife]["DEAT"])
+            if individuals[wife]["DEAT"] != "":
+                if individuals[child]["BIRT"] > individuals[wife]["DEAT"]:
+                    print(
+                    "Error: US09: {} died on {}, so {} cannot be born on {}".format(
+                        wife,
+                        individuals[wife]["DEAT"].strftime("%Y-%m-%d"),
+                        child,
+                        individuals[child]["BIRT"].strftime("%Y-%m-%d"),
+                    )
+                )
+            if individuals[husband]["DEAT"] != "":
+                if individuals[child]["BIRT"] > individuals[husband]["DEAT"] + datetime.timedelta(6 * 365 / 12):
+                    print(
+                    "Error: US09: {} died on {}, so {} cannot be born on {}".format(
+                        husband,
+                        individuals[husband]["DEAT"].strftime("%Y-%m-%d"),
+                        child,
+                        individuals[child]["BIRT"].strftime("%Y-%m-%d"),
+                    )
+                )         
+    return True
 
+def listRecentBirths(individuals):
+    recent=[]
+    for indi in individuals:
+        today = datetime.date.today()
+        thirtyDaysAgo = today - datetime.timedelta(days=30)
+        if individuals[indi]["BIRT"].date() >= thirtyDaysAgo:
+            recent.append(indi)
+    print("Individuals that have been born recently: "+str(recent))
+    return True
+
+def parentsNotOld(individuals,families):
+    maxAgeM = 80
+    maxAgeF = 60
+    today = datetime.date.today()
+    for fam in families:
+        husbandBirth = individuals[" ".join(families[fam]["HUSB"])]["BIRT"]
+        wifeBirth = individuals[" ".join(families[fam]["WIFE"])]["BIRT"]
+        children = families[fam]['CHIL']
+        for child in children:
+            childBirth = individuals[child]["BIRT"]
+            fatherDiff = childBirth - husbandBirth
+            motherDiff = childBirth - wifeBirth
+            if fatherDiff.days / 365 >= maxAgeM:
+                print("Error: US12: Father in family {} is more than 80 years older than child {}".format(fam,child))
+            if motherDiff.days / 365 >= maxAgeM:
+                print("Error: US12: Mother in family {} is more than 60 years older than child {}".format(fam,child))
+    return True
+            
 def validation(individuals, families):
     checkDates(individuals, families)
     checkGenderForSpouses(individuals, families)
@@ -485,6 +550,9 @@ def validation(individuals, families):
     recentDeaths(individuals)
     checkMultipleBirths(individuals,families)
     checkMarriageAfterBirth(individuals, families)
+    checkBirthBeforeDeathofParents(individuals, families)
+    listRecentBirths(individuals),
+    parentsNotOld(individuals,families)
 
 
 def printInfo(individuals, families):
